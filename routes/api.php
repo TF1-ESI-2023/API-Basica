@@ -16,7 +16,10 @@ use App\Http\Controllers\FrutaController;
 
 Route::prefix('v1')->group(function () {
     Route::get("/fruta",[FrutaController::class,'List']);
+    Route::get("/fruta/{d}",[FrutaController::class,'Find']);
     Route::post("/fruta",[FrutaController::class,'Create']);
+    Route::delete("/fruta/{d}",[FrutaController::class,'Delete']);
+    Route::put("/fruta/{d}",[FrutaController::class,'Update']);
 
 });
 
