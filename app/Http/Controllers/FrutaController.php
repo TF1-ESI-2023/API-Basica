@@ -9,6 +9,7 @@ class FrutaController extends Controller
 {
     public function List(Request $request){
         return $fruta = Fruta::all();
+
     }
 
     public function Find(Request $request, $idFruta){
