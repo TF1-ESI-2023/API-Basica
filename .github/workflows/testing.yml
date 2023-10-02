@@ -11,6 +11,15 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ggmartinez/laravel:php-82
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_DATABASE: laravel
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=10s --health-retries=10
     steps:
     - uses: actions/checkout@v3
 
@@ -23,25 +32,17 @@ jobs:
     - name: Generate key
       run: php artisan key:generate
 
-    - name: Create database file
-      run: |
-        touch database/database.sqlite
-        chmod 600 database/database.sqlite
-
     - name: Run migrations
       env:
-        DB_CONNECTION: sqlite
-        DB_DATABASE: database/database.sqlite
+        DB_HOST: mysql
       run: php artisan migrate
 
     - name: Seed Database
       env:
-        DB_CONNECTION: sqlite
-        DB_DATABASE: database/database.sqlite
+        DB_HOST: mysql
       run: php artisan db:seed
 
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       env:
-        DB_CONNECTION: sqlite
-        DB_DATABASE: database/database.sqlite
+        DB_HOST: mysql
       run: php artisan test
